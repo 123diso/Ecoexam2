@@ -1,15 +1,31 @@
 /**
- * Assign roles to players
- * @param {Array} players - Array of player objects
- * @returns {Array} Players with assigned roles
+ * Asigna roles y ROTA los roles existentes
+ * @param {Array} players
+ * @returns {Array}
  */
 const assignRoles = (players) => {
   if (players.length === 0) return players;
 
-  // Shuffle players array
+  // Si ya hay roles asignados, ROTARLOS
+  const playersWithRoles = players.filter((p) => p.role);
+  if (playersWithRoles.length > 0) {
+    // Rotar roles: Marco -> Polo, Polo Especial -> Marco, Polo -> Polo Especial
+    players.forEach((player) => {
+      if (player.role === "marco") {
+        player.role = "polo";
+      } else if (player.role === "polo-especial") {
+        player.role = "marco";
+      } else if (player.role === "polo") {
+        player.role = "polo-especial";
+      }
+    });
+
+    return players;
+  }
+
+  // Primera vez: asignar roles aleatorios
   const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
 
-  // Assign one marco, one polo-especial, and the rest as polo
   shuffledPlayers.forEach((player, index) => {
     if (index === 0) {
       player.role = "marco";
